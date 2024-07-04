@@ -1,3 +1,5 @@
+server:
+  port: 8081
 spring:
   application:
     name: userIceBoxCheck
@@ -6,3 +8,30 @@ spring:
     hibernate:
       ddl-auto: none
 
+
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/mydatabase
+#    username: user
+#    password: password
+#    hikari:
+#      maximum-pool-size: 10
+#      minimum-idle: 5
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#  profiles:
+#    active: dev
+#
+#logging:
+#  level:
+#    root: INFO
+#
+#server:
+#  port: 8080
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
