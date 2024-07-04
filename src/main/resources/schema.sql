@@ -1,0 +1,9 @@
+create table icebox (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+list VARCHAR(300) NOT NULL
+);
+
+create table users (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+products VARCHAR(300) NOT NULL
+);

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: userIceBoxCheck
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
