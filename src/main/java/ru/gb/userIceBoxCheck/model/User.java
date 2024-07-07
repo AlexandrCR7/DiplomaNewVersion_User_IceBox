@@ -2,7 +2,6 @@ package ru.gb.userIceBoxCheck.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.List;
 
 @Data
@@ -20,4 +19,5 @@ public class User {
         IceBox iceBox = new IceBox();
         this.products = iceBox.getList();
     }
+    @OneToOne
 }

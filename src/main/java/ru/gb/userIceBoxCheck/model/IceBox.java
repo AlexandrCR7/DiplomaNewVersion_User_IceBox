@@ -22,4 +22,6 @@ public class IceBox {
         RandomService randomService = new RandomService();
         this.list = randomService.randomList();
     }
+
+    @OneToOne
 }
