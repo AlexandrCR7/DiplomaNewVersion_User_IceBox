@@ -1,5 +1,6 @@
 package ru.gb.userIceBoxCheck.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,10 +19,15 @@ public class IceBox {
     @Column(nullable = false, name = "list")
     private List<String> list;
 
+    //    @OneToOne
+    @OneToOne(mappedBy = "icebox")
+    @JsonBackReference
+    private User user;
+
     public IceBox() {
         RandomService randomService = new RandomService();
         this.list = randomService.randomList();
     }
 
-    @OneToOne
+
 }

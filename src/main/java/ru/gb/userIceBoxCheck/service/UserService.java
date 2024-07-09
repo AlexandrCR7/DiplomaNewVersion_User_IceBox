@@ -32,8 +32,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User addUser(List<String> products){
+    public User addUser(String name, List<String> products){
         User user = new User();
+        user.setName(name);
         user.setProducts(products);
         return user;
     }

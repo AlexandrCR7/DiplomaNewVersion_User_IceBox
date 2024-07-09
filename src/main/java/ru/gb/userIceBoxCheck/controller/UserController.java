@@ -40,15 +40,15 @@ public class UserController {
         return "User has been deleted";
     }
 
-    @GetMapping("/newUser")
-    public String newUser(Model model){
-        model.addAttribute("newUser", userRepository.findAll());
-        return "User has been created";
-    }
+//    @GetMapping("/newUser")
+//    public String newUser(Model model){
+//        model.addAttribute("newUser", userRepository.findAll());
+//        return "User has been created";
+//    }
 
     @PostMapping("/newUser")
     public String newUser(@RequestBody User user, Model model){
-        userService.saveUser(userService.addUser(user.getProducts()));
+        userService.saveUser(userService.addUser(user.getName(),user.getProducts()));
         model.addAttribute("newUser", userService.getAll());
         return "User has been created";
     }
