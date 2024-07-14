@@ -8,6 +8,7 @@ import ru.gb.userIceBoxCheck.client.RecipeClient;
 import ru.gb.userIceBoxCheck.model.IceBox;
 import ru.gb.userIceBoxCheck.repository.IceBoxRepository;
 import ru.gb.userIceBoxCheck.request.IngredientRequest;
+import ru.gb.userIceBoxCheck.request.RecipeRequest;
 import ru.gb.userIceBoxCheck.service.IseBoxService;
 
 import java.util.List;
@@ -79,6 +80,14 @@ public class IceBoxController {
     public IngredientRequest ingredientRequests(@PathVariable Long id) {
         return recipeClient.getIngredient(id);
     }
+
+    @GetMapping("/generate/{id}")
+    public List<RecipeRequest> generateRecipe(@PathVariable Long id){
+        System.out.println("Получен запрос с Id " + id);
+        return iseBoxService.generateById(id);
+    }
+
+
 
     /**
      * Пример - тестовый : @GetMapping("/test")

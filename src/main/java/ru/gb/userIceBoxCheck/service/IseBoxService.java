@@ -10,6 +10,7 @@ import ru.gb.userIceBoxCheck.client.RecipeClient;
 import ru.gb.userIceBoxCheck.model.IceBox;
 import ru.gb.userIceBoxCheck.repository.IceBoxRepository;
 import ru.gb.userIceBoxCheck.request.IngredientRequest;
+import ru.gb.userIceBoxCheck.request.RecipeRequest;
 
 import java.util.*;
 
@@ -69,4 +70,28 @@ public class IseBoxService {
         return iceBox;
     }
 
+    /**
+     * Создать исключение!!!!!!!!!!!!
+     * @param id
+     * @return
+     */
+    public List<RecipeRequest> generateById(Long id) {
+        IceBox iceBox = iceBoxRepository.findById(id).orElseThrow(); //1e исключение
+        String ingredients = iceBox.getIngredients();
+        if(ingredients == null || ingredients.isEmpty()){
+            // 2е исключение холодильник пуст
+        }
+        String[] ingredientsList = ingredients.split(" ");
+        List<IngredientRequest> ingredientRequestList = new ArrayList<>();
+        for (String str : ingredientsList) {
+            ingredientRequestList.add(new IngredientRequest(str));
+        }
+        System.out.println("Перед отправкой запроса " + ingredientRequestList);
+        List<RecipeRequest> recipeRequests = recipeClient.getRecipes(ingredientRequestList);
+        System.out.println("Получен ответ " + recipeRequests);
+        /**
+         * Посмотреть как перевернуть коллекцию
+         */
+        return recipeRequests.stream().sorted(Comparator.comparing(recipeRequest -> recipeRequest.ingredients().size())).toList();
+    }
 }
