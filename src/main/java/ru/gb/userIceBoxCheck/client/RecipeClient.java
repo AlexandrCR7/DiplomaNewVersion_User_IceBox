@@ -9,7 +9,6 @@ import ru.gb.userIceBoxCheck.request.IngredientRequest;
 import ru.gb.userIceBoxCheck.request.RecipeRequest;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Интерфейс подключения к другому микросервису рецептов
@@ -22,14 +21,13 @@ public interface RecipeClient {
      * продукты подтягиваются из другого микро, по этому пути и вызывается метод getAll
      * @return
      */
-    @GetMapping("/products") //!!!!! Уточнить как работает этот метод,
-    // почему это интерфейс, почему у него нет реализации, на каком этапе этот сет заполняется ингредиентами
+    @GetMapping("/products")
     List<IngredientRequest> getIngredients();
 
     @GetMapping("/products/{id}")
     IngredientRequest getIngredient(@PathVariable Long id);
 
     @PostMapping("/recipes/generate")
-    List<RecipeRequest> getRecipes(@RequestBody List<IngredientRequest> ingredientRequests);
+    List<RecipeRequest> getRecipes(@RequestBody List<IngredientRequest> ingredients);
 
 }

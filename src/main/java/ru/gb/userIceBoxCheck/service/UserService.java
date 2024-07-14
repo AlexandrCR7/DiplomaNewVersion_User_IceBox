@@ -3,11 +3,11 @@ package ru.gb.userIceBoxCheck.service;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
+import ru.gb.userIceBoxCheck.exeptions.UserNotFoundException;
 import ru.gb.userIceBoxCheck.model.User;
 import ru.gb.userIceBoxCheck.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,8 +20,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUser(Long id){
-        return userRepository.findById(id);
+    public User getUser(Long id){
+        return userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("User by %d not found".formatted(id)));
     }
 
     public void deleteUser(Long id){
@@ -32,10 +33,4 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    public User addUser(String name, List<String> products){
-//        User user = new User();
-//        user.setName(name);
-//        user.setProducts(products);
-//        return user;
-//    }
 }

@@ -1,7 +1,6 @@
 package ru.gb.userIceBoxCheck.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.userIceBoxCheck.client.RecipeClient;
@@ -12,18 +11,15 @@ import ru.gb.userIceBoxCheck.request.RecipeRequest;
 import ru.gb.userIceBoxCheck.service.IseBoxService;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("/iceBox")
 public class IceBoxController {
 
-    @Autowired
-    private IseBoxService iseBoxService;
-    @Autowired
-    private IceBoxRepository iceBoxRepository;
+
+    private final IseBoxService iseBoxService;
+
+    private final IceBoxRepository iceBoxRepository;
 
     /**
      * Для теста, потом удалить.
@@ -34,21 +30,16 @@ public class IceBoxController {
     public List<IceBox> findAll(){
         return iseBoxService.findAll();
     }
-
-    // меняет данные в базе данных, но при этом не отрабатывает код, не показывает измененный холодильник
     @GetMapping("/change/{id}")
     public IceBox show(@PathVariable Long id){
         return iseBoxService.fillIceBox(id);
     }
-
-    // поменял на лист, т.к не мог вызвать у сета поле категории, а если и получалось его вызывать то он добавлял в
-    // строку много лишней информации, название класса, название поля + содержимое поля
     @GetMapping("/test")
     public List<IngredientRequest> testing(){
         return recipeClient.getIngredients();
     }
     @GetMapping("/show/{id}")
-    public Optional<IceBox> showById(@PathVariable Long id){
+    public IceBox showById(@PathVariable Long id){
         return iseBoxService.findById(id);
     }
 
@@ -86,16 +77,4 @@ public class IceBoxController {
         System.out.println("Получен запрос с Id " + id);
         return iseBoxService.generateById(id);
     }
-
-
-
-    /**
-     * Пример - тестовый : @GetMapping("/test")
-     * создать энд поинт, который заполняет холодильник.
-     * должен быть id холодильника, который нужно заполнить
-     * будет вызываться iceBoxService, который будет дергать метод по заполнению холодоса
-     * в iceboxService внедрить recipeClient
-     * В методе по заполнению холодильника дернуть метод getIngredients, получим множество продуктов,
-     * и передаем id холодильника в icebox service, в icebox service вытаскиваем холодильник по id
-     */
 }

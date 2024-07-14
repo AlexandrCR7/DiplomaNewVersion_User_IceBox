@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients //включаем фиджн клиента
+@EnableFeignClients //включаем OpenFeign для связи с другим микросервисом
 public class UserIceBoxCheckApplication {
 
 	public static void main(String[] args) {

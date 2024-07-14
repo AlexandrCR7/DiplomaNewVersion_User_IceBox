@@ -3,10 +3,11 @@ package ru.gb.userIceBoxCheck.service;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.gb.userIceBoxCheck.client.RecipeClient;
+import ru.gb.userIceBoxCheck.exeptions.IceBoxIsNullException;
+import ru.gb.userIceBoxCheck.exeptions.IceBoxNotFoundException;
+import ru.gb.userIceBoxCheck.exeptions.UserNotFoundException;
 import ru.gb.userIceBoxCheck.model.IceBox;
 import ru.gb.userIceBoxCheck.repository.IceBoxRepository;
 import ru.gb.userIceBoxCheck.request.IngredientRequest;
@@ -27,9 +28,10 @@ public class IseBoxService {
         return iceBoxRepository.findAll();
     }
 
-    @Transactional
-    public Optional<IceBox> findById(Long id){
-        return iceBoxRepository.findById(id);
+
+    public IceBox findById(Long id){
+        return iceBoxRepository.findById(id).orElseThrow(() ->
+                new IceBoxNotFoundException("IceBox by %d not found".formatted(id)));
     }
 
     public void deleteById(Long id){
@@ -55,7 +57,7 @@ public class IseBoxService {
     // достаем ингредиенты, сплитим через пробел, последний убираем
     public IceBox fillIceBox(Long id) {
         List<IngredientRequest> ingredientRequests = recipeClient.getIngredients();
-        IceBox iceBox = iceBoxRepository.getReferenceById(id);
+        IceBox iceBox = iceBoxRepository.findById(id).orElseThrow();
         Set<String> setList = new HashSet<>();
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < ingredientRequests.size(); i++) {
@@ -76,10 +78,11 @@ public class IseBoxService {
      * @return
      */
     public List<RecipeRequest> generateById(Long id) {
-        IceBox iceBox = iceBoxRepository.findById(id).orElseThrow(); //1e исключение
+        IceBox iceBox = iceBoxRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("IceBox by %d not found".formatted(id)));
         String ingredients = iceBox.getIngredients();
         if(ingredients == null || ingredients.isEmpty()){
-            // 2е исключение холодильник пуст
+            throw new IceBoxIsNullException("IceBox by %d is null".formatted(id));
         }
         String[] ingredientsList = ingredients.split(" ");
         List<IngredientRequest> ingredientRequestList = new ArrayList<>();
@@ -89,9 +92,7 @@ public class IseBoxService {
         System.out.println("Перед отправкой запроса " + ingredientRequestList);
         List<RecipeRequest> recipeRequests = recipeClient.getRecipes(ingredientRequestList);
         System.out.println("Получен ответ " + recipeRequests);
-        /**
-         * Посмотреть как перевернуть коллекцию
-         */
-        return recipeRequests.stream().sorted(Comparator.comparing(recipeRequest -> recipeRequest.ingredients().size())).toList();
+        return recipeRequests.stream().sorted(Comparator.comparing((RecipeRequest recipeRequest) ->
+                recipeRequest.ingredients().size()).reversed()).toList();
     }
 }
