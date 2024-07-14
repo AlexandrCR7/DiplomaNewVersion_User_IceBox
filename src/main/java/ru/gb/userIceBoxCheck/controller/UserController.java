@@ -19,6 +19,9 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
+    /**
+     * почистить контроллер, сделать так же как и в инргредиентах
+     */
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -46,11 +49,11 @@ public class UserController {
 //        return "User has been created";
 //    }
 
-    @PostMapping("/newUser")
-    public String newUser(@RequestBody User user, Model model){
-        userService.saveUser(userService.addUser(user.getName(),user.getProducts()));
-        model.addAttribute("newUser", userService.getAll());
-        return "User has been created";
-    }
+//    @PostMapping("/newUser")
+//    public String newUser(@RequestBody User user, Model model){
+//        userService.saveUser(userService.addUser(user.getName(),user.getProducts()));
+//        model.addAttribute("newUser", userService.getAll());
+//        return "User has been created";
+//    }
 
 }

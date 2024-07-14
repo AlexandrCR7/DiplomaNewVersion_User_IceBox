@@ -3,10 +3,23 @@ server:
 spring:
   application:
     name: userIceBoxCheck
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Users_db
+    username: postgres
+    password: 100891
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          recipe-service:
+            url: http://localhost:8080
+
+#  jpa:
+#    generate-ddl: false
+#    hibernate:
+#      ddl-auto: none
 
 
 #spring:
