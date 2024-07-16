@@ -24,37 +24,68 @@ public class IseBoxService {
 
     private final IceBoxRepository iceBoxRepository;
 
+    /**
+     * Стандартный метод CRUD
+     * @return возвращает список холодильников
+     */
     public List<IceBox> findAll(){
         return iceBoxRepository.findAll();
     }
 
-
+    /**
+     * Стандартный метод CRUD
+     * @param id - принимает на вход id искомого холодильника
+     * @return - возвращает искомый холодильник
+     * При отсутствии в репозитории холодильника по запрашиваемому id обрабатывает ошибку
+     */
     public IceBox findById(Long id){
         return iceBoxRepository.findById(id).orElseThrow(() ->
                 new IceBoxNotFoundException("IceBox by %d not found".formatted(id)));
     }
 
+    /**
+     * Стандартный метод CRUD
+     * @param id - принимает на вход id искомого холодильника
+     * Удаляет искомый холодильник
+     */
     public void deleteById(Long id){
         iceBoxRepository.deleteById(id);
     }
 
+    /**
+     * Стандартный метод CRUD
+     * @param iceBox - принимает холодильник на вход и сохраняет его
+     */
     public void saveIseBox(IceBox iceBox){
         iceBoxRepository.save(iceBox);
     }
 
+    /**
+     * Стандартный метод CRUD по созданию объекта
+     * @param ingredients - принимает на вход параметр,
+     * который будем менять в пустом холодильнике
+     * @return - возвращаем готовый объект
+     */
     public IceBox addIceBox(String ingredients){
         IceBox iceBox = new IceBox();
         iceBox.setIngredients(ingredients);
         return iceBox;
     }
 
+    /**
+     * Тестовый метод
+     * @return возвращает все ингредиенты, которые существуют в другом микросервисе
+     */
     @GetMapping("/test")
     public List<IngredientRequest> testing(){
         return recipeClient.getIngredients();
     }
 
-    //добавить логику добавления продуктов в холодильник, цикл по ингредиентам,
-    // достаем ингредиенты, сплитим через пробел, последний убираем
+    /**
+     * Метод создан для заполнения холодильника ингредиентами, которые передаются от другого микросервиса
+     * @param id - передает в метод id холодильника, который мы хотим найти
+     * @return возвращает объект класса IceBox заполненный ингредиентами содержащимися в холодильнике
+     */
     public IceBox fillIceBox(Long id) {
         List<IngredientRequest> ingredientRequests = recipeClient.getIngredients();
         IceBox iceBox = iceBoxRepository.findById(id).orElseThrow();
@@ -73,9 +104,10 @@ public class IseBoxService {
     }
 
     /**
-     * Создать исключение!!!!!!!!!!!!
-     * @param id
-     * @return
+     * Метод сравнивает список ингредиентов в холодильнике с ингредиентами хранящимися в рецептах,
+     * затем сортирует их порядке убывания
+     * @param id - передает id холодильника, в котором содержаться рецепты
+     * @return возвращает отсортированный по релевантности список рецептов
      */
     public List<RecipeRequest> generateById(Long id) {
         IceBox iceBox = iceBoxRepository.findById(id).orElseThrow(() ->
@@ -89,9 +121,7 @@ public class IseBoxService {
         for (String str : ingredientsList) {
             ingredientRequestList.add(new IngredientRequest(str));
         }
-        System.out.println("Перед отправкой запроса " + ingredientRequestList);
         List<RecipeRequest> recipeRequests = recipeClient.getRecipes(ingredientRequestList);
-        System.out.println("Получен ответ " + recipeRequests);
         return recipeRequests.stream().sorted(Comparator.comparing((RecipeRequest recipeRequest) ->
                 recipeRequest.ingredients().size()).reversed()).toList();
     }
